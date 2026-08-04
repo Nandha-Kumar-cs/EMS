@@ -17,6 +17,11 @@ checkSession();
         .dataTables_scrollFootInner input {
             background: #ffffff;
         }
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 2px 8px;
+            margin: 0 2px;
+            font-size: 12px;
+        }
     </style>
     <title>EMS Employees</title>
 </head>

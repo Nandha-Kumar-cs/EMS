@@ -324,6 +324,23 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             'data' => $rows,
         ]);
 
+    }elseif($req['action'] == 'options'){
+
+        $stmt = mysqli_prepare($conn, "SELECT id, employee_name FROM employees ORDER BY employee_name ASC");
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $options = [];
+        while($row = mysqli_fetch_assoc($result)){
+            $options[] = $row;
+        }
+        mysqli_stmt_close($stmt);
+
+        echo json_encode([
+            'status' => 200,
+            'employees' => $options
+        ]);
+
     }else {
         http_response_code(422);
         echo json_encode([
