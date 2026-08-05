@@ -108,6 +108,14 @@ ems/
 │   ├── employee.php          # Employee CRUD + DataTables
 │   ├── dashboard.php         # Summary stats
 │   └── upload.php            # File upload / list / delete
+├── empAPI/                   # Employee APIs split into separate files
+│   ├── sessionCheck.php      # Session guard helper
+│   ├── validateEmployee.php  # Employee validation helper
+│   ├── getAll.php            # List all employees
+│   ├── getEmployee.php       # Get single employee
+│   ├── addEmployee.php       # Add employee
+│   ├── updateEmployee.php    # Update employee
+│   └── deleteEmployee.php    # Delete employee
 ├── config/
 │   └── db.php                # MySQLi connection
 ├── pages/
@@ -118,6 +126,182 @@ ems/
 │   └── .htaccess             # Blocks PHP execution
 └── README.md
 ```
+
+## Employee API (empAPI)
+
+The employee APIs are also available as separate files inside the `empAPI/` folder. Every endpoint returns JSON and needs a logged in session.
+
+Base URL: `http://localhost/EMS/empAPI/`
+
+| Endpoint | Method | Body / Query | Description |
+| --- | --- | --- | --- |
+| `getAll.php` | GET | – | List all employees |
+| `getEmployee.php` | GET | `?id=1` | Get a single employee |
+| `addEmployee.php` | POST | employee fields | Add a new employee |
+| `updateEmployee.php` | POST | `employee_id` + employee fields | Update an employee |
+| `deleteEmployee.php` | POST | `employee_id` | Delete an employee |
+
+Employee fields used by add and update:
+
+`employee_name`, `email`, `mobile`, `department`, `designation`, `salary`, `date_of_joining`
+
+### Testing with Postman
+
+**Step 1 – Login first (to get the session cookie)**
+
+The APIs will return `401 Unauthorized access !` until you log in. Postman stores the `PHPSESSID` cookie automatically, so you only need to do this once.
+
+- Method: `POST`
+- URL: `http://localhost/EMS/api/auth.php`
+- Body: `x-www-form-urlencoded`
+
+| Key | Value |
+| --- | --- |
+| action | login |
+| email | admin@gmail.com |
+| password | your password |
+
+Response:
+
+```json
+{
+    "status": 200,
+    "message": "Login successful !"
+}
+```
+
+**Step 2 – Call the employee APIs**
+
+Use `x-www-form-urlencoded` for all POST requests (the APIs read `$_POST`).
+
+**Get all employees**
+
+- Method: `GET`
+- URL: `http://localhost/EMS/empAPI/getAll.php`
+
+```json
+{
+    "status": 200,
+    "result": [
+        {
+            "id": 1,
+            "employee_name": "Nandhakumar",
+            "email": "nandha@gmail.com",
+            "mobile": "1234567890",
+            "department": "Mechanical",
+            "designation": "Qc",
+            "salary": "125000.00",
+            "date_of_joining": "2003-05-03"
+        }
+    ]
+}
+```
+
+**Get single employee**
+
+- Method: `GET`
+- URL: `http://localhost/EMS/empAPI/getEmployee.php?id=1`
+
+**Add employee**
+
+- Method: `POST`
+- URL: `http://localhost/EMS/empAPI/addEmployee.php`
+- Body: `x-www-form-urlencoded`
+
+| Key | Value |
+| --- | --- |
+| employee_name | Test User |
+| email | testuser@gmail.com |
+| mobile | 9876543210 |
+| department | IT |
+| designation | Developer |
+| salary | 45000 |
+| date_of_joining | 2024-01-15 |
+
+Success response (`201`):
+
+```json
+{
+    "status": 201,
+    "message": "Employee added successfully !"
+}
+```
+
+Validation / duplicate email response (`422`):
+
+```json
+{
+    "status": 422,
+    "errors": {
+        "email": "Email already exists !"
+    }
+}
+```
+
+**Update employee**
+
+- Method: `POST`
+- URL: `http://localhost/EMS/empAPI/updateEmployee.php`
+- Body: `x-www-form-urlencoded`
+- Send `employee_id` along with all the employee fields.
+
+| Key | Value |
+| --- | --- |
+| employee_id | 2 |
+| employee_name | Test User Updated |
+| email | testuser@gmail.com |
+| mobile | 9876500000 |
+| department | HR |
+| designation | Manager |
+| salary | 60000 |
+| date_of_joining | 2024-02-20 |
+
+Success response (`200`):
+
+```json
+{
+    "status": 200,
+    "message": "Employee updated successfully !"
+}
+```
+
+**Delete employee**
+
+- Method: `POST`
+- URL: `http://localhost/EMS/empAPI/deleteEmployee.php`
+- Body: `x-www-form-urlencoded`
+
+| Key | Value |
+| --- | --- |
+| employee_id | 2 |
+
+Success response (`200`):
+
+```json
+{
+    "status": 200,
+    "message": "Employee deleted successfully !"
+}
+```
+
+### Status codes
+
+| Code | When it happens |
+| --- | --- |
+| 200 | Request successful |
+| 201 | Employee added |
+| 401 | Not logged in (`Unauthorized access !`) |
+| 404 | Employee not found |
+| 405 | Wrong request method (`Invalid Request !!`) |
+| 422 | Validation failed / invalid employee id / duplicate email |
+| 500 | Database error (`Something went wrong, please try again !`) |
+
+### Common mistakes while testing
+
+- Getting `401` on every request – login through `api/auth.php` first and keep Postman cookies enabled.
+- Getting `405` – the add, update and delete APIs accept `POST` only.
+- Getting `422` with an empty body – select `x-www-form-urlencoded` in the Body tab, not `raw` JSON.
+- `date_of_joining` must be in `YYYY-MM-DD` format and `mobile` must be 10 to 15 digits.
 
 ## Security
 
