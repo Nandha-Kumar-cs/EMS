@@ -37,56 +37,28 @@ A core PHP employee management system built with MySQLi (procedural style), jQue
 
 1. Clone or copy the project into `C:\xampp8\htdocs\ems` (or your web root).
 2. Start Apache and MySQL from the XAMPP control panel.
-3. Create the database and tables in phpMyAdmin (see SQL below).
+3. Import `DB/ems.sql` in phpMyAdmin to create the database and tables (see Database Setup below).
 4. Update database credentials in `config/db.php` if they differ from the defaults:
    - Host: `localhost`
    - User: `root`
    - Password: (empty)
    - Database: `ems`
 5. Open `http://localhost/ems/` in your browser.
-6. Register a new account, then log in.
-
+6. Log in with `admin@gmail.com` / `Admin@123`, or register a new account.
 ## Database Setup
 
-Run these queries in phpMyAdmin (database: `ems`):
+The full database structure is kept in the `DB/` folder.
 
-```sql
-CREATE DATABASE IF NOT EXISTS ems;
-USE ems;
+Import `DB/ems.sql` from phpMyAdmin (Import tab), or run it from the command line:
 
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-CREATE TABLE employees (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  employee_name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
-  mobile VARCHAR(15) NOT NULL,
-  department VARCHAR(100) NOT NULL,
-  designation VARCHAR(100) NOT NULL,
-  salary DECIMAL(10, 2) NOT NULL,
-  date_of_joining DATE NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
-CREATE TABLE uploads (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  employee_id INT NOT NULL,
-  original_name VARCHAR(255) NOT NULL,
-  stored_name VARCHAR(255) NOT NULL,
-  file_type VARCHAR(50) NOT NULL,
-  file_size INT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+```bash
+mysql -u root -p < DB/ems.sql
 ```
+
+It creates the `ems` database with the `users`, `employees` and `uploads` tables, and inserts a default account:
+
+- Email: `admin@gmail.com`
+- Password: `Admin@123`
 
 ## Folder Structure
 
@@ -118,6 +90,8 @@ ems/
 │   └── deleteEmployee.php    # Delete employee
 ├── config/
 │   └── db.php                # MySQLi connection
+├── DB/
+│   └── ems.sql               # Database structure + default admin user
 ├── pages/
 │   ├── dashboard.php
 │   ├── employees.php
@@ -159,7 +133,7 @@ The APIs will return `401 Unauthorized access !` until you log in. Postman store
 | --- | --- |
 | action | login |
 | email | admin@gmail.com |
-| password | your password |
+| password | Admin@123 |
 
 Response:
 
