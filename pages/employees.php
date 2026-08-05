@@ -11,11 +11,11 @@ checkSession();
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <style>
-        .dataTables_scrollFootInner table tfoot th {
-            background: #f1f5f9;
-        }
         .dataTables_scrollFootInner input {
             background: #ffffff;
+        }
+        #employee_table tbody tr.odd {
+            background-color: #f1f5f9;
         }
         .dataTables_wrapper .dataTables_paginate .paginate_button {
             padding: 2px 8px;
@@ -36,9 +36,17 @@ checkSession();
                 <h2 class="text-2xl font-bold text-slate-800">
                     Employee Management
                 </h2>
-                <div class="flex gap-3">
-                    <a href="./dashboard.php" class="text-sm text-blue-800 hover:underline">Dashboard</a>
-                    <button onclick="openAddModal()" class="bg-blue-900 hover:bg-blue-800 text-white px-4 py-2 rounded-lg font-semibold transition text-sm">
+                <div class="flex gap-2">
+                    <a href="./dashboard.php" class="inline-flex items-center gap-2 bg-gradient-to-r from-slate-600 to-slate-800 hover:from-slate-700 hover:to-slate-900 text-white px-3.5 py-1.5 rounded-lg font-semibold shadow-md hover:shadow-lg transition text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h3m10-11v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        Dashboard
+                    </a>
+                    <button onclick="openAddModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-700 to-blue-900 hover:from-blue-800 hover:to-blue-950 text-white px-3.5 py-1.5 rounded-lg font-semibold shadow-md hover:shadow-lg transition text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
                         Add Employee
                     </button>
                 </div>
@@ -47,7 +55,7 @@ checkSession();
             <div class="overflow-x-auto">
                 <table id="employee_table" class="w-full text-left text-sm">
                     <thead>
-                        <tr class="bg-slate-100 text-slate-700">
+                        <tr class="text-slate-700">
                             <th class="px-4 py-3">ID</th>
                             <th class="px-4 py-3">Name</th>
                             <th class="px-4 py-3">Email</th>
@@ -60,7 +68,7 @@ checkSession();
                         </tr>
                     </thead>
                     <tfoot>
-                        <tr class="bg-slate-100 text-slate-700">
+                        <tr class="text-slate-700">
                             <th class="px-2 py-2"><input type="text" placeholder="ID" class="w-full px-2 py-1 border border-slate-300 rounded-lg text-sm"></th>
                             <th class="px-2 py-2"><input type="text" placeholder="Name" class="w-full px-2 py-1 border border-slate-300 rounded-lg text-sm"></th>
                             <th class="px-2 py-2"><input type="text" placeholder="Email" class="w-full px-2 py-1 border border-slate-300 rounded-lg text-sm"></th>
